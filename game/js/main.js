@@ -4,7 +4,7 @@ window.onload = function() {
 
         function preload () {
 
-            game.load.image('logo', 'phaser.png');
+            game.load.image('logo', 'game/images/phaser.png');
 
         }
 
