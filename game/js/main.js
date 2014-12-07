@@ -9,6 +9,8 @@ window.onload = function() {
   	var bucket;
 	var garbageGroup;
 	var cursors;
+	var score = 0;
+	var scoreText;
 
 	function create() {
 	    game.physics.startSystem(Phaser.Physics.P2JS);
@@ -26,7 +28,7 @@ window.onload = function() {
 
 	    //  This part is vital if you want the objects with their own collision groups to still collide with the world bounds
 	    //  (which we do) - what this does is adjust the bounds to use its own collision group.
-	    game.physics.p2.updateBoundsCollisionGroup();
+	//    game.physics.p2.updateBoundsCollisionGroup();
 
 	    game.stage.backgroundColor = '#66CCFF';
 
@@ -45,9 +47,6 @@ window.onload = function() {
        
 	   	};
 	   	
-
-
-
 	    bucket = game.add.sprite(300, 600, 'bucket');
 		game.physics.p2.enable(bucket);
 		bucket.body.setZeroDamping();
@@ -57,17 +56,13 @@ window.onload = function() {
 	    bucket.body.setCollisionGroup(bucketCollisionGroup);
 
    		bucket.body.collides(garbageCollisionGroup, collisionHandler, this);
-		
-	   
 
 	    cursors = game.input.keyboard.createCursorKeys();
 
 	    game.time.events.loop(150, throwGarbage, this);
 
-	    game.add.text(16, 16, 'Left / Right to move', { font: '18px Arial', fill: '#ffffff' });
+	   scoreText = game.add.text(16, 16, 'Score: ' + score, { font: '18px Arial', fill: '#ffffff' });
 
-	    
-		
 	}
 
 	function throwGarbage() {
@@ -84,8 +79,11 @@ window.onload = function() {
 	}
 
 	function collisionHandler (bucket, garbage) {
-    	if (garbage.x >= bucket.x && (garbage.x + garbage.sprite.width <= bucket.x + bucket.sprite.width)) {
+    	if (garbage.x + garbage.sprite.width/2 >= bucket.x && (garbage.x + garbage.sprite.width*3/2 <= bucket.x + bucket.sprite.width)) {
     		garbage.sprite.kill();
+    		score+=1;
+    		scoreText.setText("Score: " + score);
+
         	return true;
 	    } else {
 	    	return false;
@@ -95,13 +93,12 @@ window.onload = function() {
 
 	function update() {
 
-	  //  game.physics.arcade.collide(bucket, garbageGroup, null, catchGarbage, this);
-	//    game.physics.arcade.collide(bucket, garbageGroup, collisionHandler, null, this);
-	   // game.physics.arcade.collide(garbageGroup,garbageGroup);
+	  	// game.physics.arcade.collide(bucket, garbageGroup, null, catchGarbage, this);
+		// game.physics.arcade.collide(bucket, garbageGroup, collisionHandler, null, this);
+	    // game.physics.arcade.collide(garbageGroup,garbageGroup);
 
-	    
     	bucket.body.setZeroVelocity();
-
+    	bucket.body.y = 532;
 
 	    if (cursors.left.isDown)
 	    {
@@ -113,20 +110,15 @@ window.onload = function() {
 	    }
 
 	    garbageGroup.forEachAlive(checkBounds, this);
-
 	}
 
 	function checkBounds(garbage) {
-
-	    if (garbage.y > 600)
-	    {
+	    if (garbage.y > 600) {
 	        garbage.kill();
 	    }
-
 	}
 
 	function render() {
-		
-	    
+		game.debug.body(bucket);
 	}
 };
