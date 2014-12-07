@@ -212,7 +212,7 @@ window.onload = function() {
     				bucket.sprite.frame = 0;
     			}
     			
-    			scoreText.setText("Score: " + score);
+    			scoreText.setText("Score is score it: " + score);
 			}
         	return true;
 	    } else {
@@ -230,13 +230,14 @@ window.onload = function() {
     	bucket.body.setZeroVelocity();
     	bucket.body.y = 532;
 
-	    if (cursors.left.isDown)
+	    if (cursors.left.isDown && bucket.body.x>0)
 	    {
-	        bucket.body.moveLeft(200);
+	        bucket.body.moveLeft(200);          
 	    }
-	    else if (cursors.right.isDown)
+	    else if (cursors.right.isDown && bucket.body.x<800)
 	    {
 	        bucket.body.moveRight(200);
+           
 	    }
 
 	    garbageGroup.forEachAlive(checkBounds, this);
