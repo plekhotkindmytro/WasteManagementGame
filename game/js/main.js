@@ -12,32 +12,53 @@ window.onload = function() {
 
 	function create() {
 	    game.physics.startSystem(Phaser.Physics.P2JS);
+	    game.physics.p2.setImpactEvents(true);
 		game.physics.p2.defaultRestitution = 0.8;
-		game.physics.p2.gravity.y = 400;
+		game.physics.p2.gravity.y = 200;
+		 //  Turn on impact events for the world, without this we get no collision callbacks
+	    game.physics.p2.setImpactEvents(true);
+
+	  //  game.physics.p2.restitution = 0.1;
+
+	    //  Create our collision groups. One for the player, one for the pandas
+	    var bucketCollisionGroup = game.physics.p2.createCollisionGroup();
+	    var garbageCollisionGroup = game.physics.p2.createCollisionGroup();
+
+	    //  This part is vital if you want the objects with their own collision groups to still collide with the world bounds
+	    //  (which we do) - what this does is adjust the bounds to use its own collision group.
+	    game.physics.p2.updateBoundsCollisionGroup();
 
 	    game.stage.backgroundColor = '#66CCFF';
 
 	    garbageGroup = game.add.group();
+	    garbageGroup.enableBody = true;
+    	garbageGroup.physicsBodyType = Phaser.Physics.P2JS;
 
 	    garbageGroup.createMultiple(50, 'bottle', 0, false);
-	   game.physics.p2.enable(garbageGroup);
+	   	game.physics.p2.enable(garbageGroup, false);
+	   	for (var i = garbageGroup.length - 1; i >= 0; i--) {
+	   		//garbageGroup.getAt(i).body.collideWorldBounds = true;
+	   		garbageGroup.getAt(i).body.setCollisionGroup(garbageCollisionGroup);
+	   		//garbageGroup.getAt(i).body.setZeroDamping();
+			//garbageGroup.getAt(i).body.fixedRotation = true;
+        	garbageGroup.getAt(i).body.collides([bucketCollisionGroup]);
+       
+	   	};
+	   	
 
-	    bucket = game.add.sprite(300, 450, 'bucket');
+
+
+	    bucket = game.add.sprite(300, 600, 'bucket');
 		game.physics.p2.enable(bucket);
 		bucket.body.setZeroDamping();
 		bucket.body.fixedRotation = true;
-	    //game.physics.p2.gravity.y = 400;
+		bucket.body.data.gravityScale = 0;
+    
+	    bucket.body.setCollisionGroup(bucketCollisionGroup);
 
-	    //  Enable physics on everything added to the world so far (the true parameter makes it recurse down into children)
-	  //  game.physics.p2.enable(game.world, true);
-	   
+   		bucket.body.collides(garbageCollisionGroup, collisionHandler, this);
 		
-	    bucket.body.allowGravity = 0;
-	    // bucket.body.checkCollision.left = false;
-	    // bucket.body.checkCollision.right = false;
-		//bucket.body.setSize(94, 138, 0, 75);
-		bucket.body.collideWorldBounds = true;
-	    bucket.body.immovable = true;
+	   
 
 	    cursors = game.input.keyboard.createCursorKeys();
 
@@ -45,31 +66,29 @@ window.onload = function() {
 
 	    game.add.text(16, 16, 'Left / Right to move', { font: '18px Arial', fill: '#ffffff' });
 
+	    
+		
 	}
 
 	function throwGarbage() {
 
 	    var garbage = garbageGroup.getFirstExists(false);
-	 //   game.physics.p2.enable(garbage,false);
+	 
 	    if (garbage)
 	    {
 	        garbage.frame = game.rnd.integerInRange(0,6);
 	        garbage.exists = true;
 	        garbage.reset(game.world.randomX, 0);
-	     
-	      //  garbage.body.bounce.y = 0.3;
 	    }
 
 	}
 
 	function collisionHandler (bucket, garbage) {
-    	if (garbage.x >= bucket.x && (garbage.x + garbage.width <= bucket.x + bucket.width)) {
-    		garbage.kill();
+    	if (garbage.x >= bucket.x && (garbage.x + garbage.sprite.width <= bucket.x + bucket.sprite.width)) {
+    		garbage.sprite.kill();
         	return true;
-	    } else  {
-	    	garbage.body.velocity.x = bucket.body.velocity.x;
-	  //      garbage.body.angularVelocity = 200;
-	        return false;
+	    } else {
+	    	return false;
 	    }
 
 	}
@@ -80,15 +99,17 @@ window.onload = function() {
 	//    game.physics.arcade.collide(bucket, garbageGroup, collisionHandler, null, this);
 	   // game.physics.arcade.collide(garbageGroup,garbageGroup);
 
-	    bucket.body.velocity.x = 0;
+	    
+    	bucket.body.setZeroVelocity();
+
 
 	    if (cursors.left.isDown)
 	    {
-	        bucket.body.velocity.x = -200;
+	        bucket.body.moveLeft(200);
 	    }
 	    else if (cursors.right.isDown)
 	    {
-	        bucket.body.velocity.x = 200;
+	        bucket.body.moveRight(200);
 	    }
 
 	    garbageGroup.forEachAlive(checkBounds, this);
@@ -105,10 +126,7 @@ window.onload = function() {
 	}
 
 	function render() {
-		game.debug.body(bucket);
-		garbageGroup.forEachAlive(function(garbage) {
-			game.debug.body(garbage);
-		}, this);
+		
 	    
 	}
 };
