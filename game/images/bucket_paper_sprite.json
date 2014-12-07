@@ -1,0 +1,30 @@
+{"frames": [
+
+{
+	"filename": "bucket_paper.png",
+	"frame": {"x":2,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_paper1.png",
+	"frame": {"x":154,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bucket_paper_sprite.png",
+	"format": "RGBA8888",
+	"size": {"w":306,"h":204},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:fb82ebca27622b7fb927686fb6f89fae:6f415bd5893e559e04c07359287af9c7:27de2b3f110c06b6db1553b1e771e9c3$"
+}
+}

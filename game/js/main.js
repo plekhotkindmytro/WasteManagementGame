@@ -5,7 +5,7 @@ window.onload = function() {
   		game.load.image('bucket_danger', 'game/images/bucket_danger.png');
   		game.load.image('bucket_plastics', 'game/images/bucket_plastics.png');
   		game.load.image('bucket_glass', 'game/images/bucket_glass.png');
-  		game.load.image('bucket_paper', 'game/images/bucket_paper.png');
+  		game.load.atlas('bucket_paper', 'game/images/bucket_paper_sprite.png', 'game/images/bucket_paper_sprite.json');
         game.load.image('bottle', 'game/images/bottle.png');
         game.load.image('paper', 'game/images/paper.png');
     }
@@ -73,6 +73,7 @@ window.onload = function() {
 	];
 
 	function create() {
+
 	    game.physics.startSystem(Phaser.Physics.P2JS);
 	    game.physics.p2.setImpactEvents(true);
 		game.physics.p2.defaultRestitution = 1.0;
@@ -109,7 +110,9 @@ window.onload = function() {
        
 	   	};
 	   	
-	    bucket = game.add.sprite(300, 600, 'bucket_plastics');
+
+	    bucket = game.add.sprite(300, 600, 'bucket_paper');
+
 		game.physics.p2.enable(bucket);
 		bucket.body.setZeroDamping();
 		bucket.body.fixedRotation = true;
@@ -118,7 +121,7 @@ window.onload = function() {
 	    bucket.body.setCollisionGroup(bucketCollisionGroup);
 
    		bucket.body.collides(garbageCollisionGroup, collisionHandler, this);
-   		bucket.type = BucketType.PLASTICS;
+   		bucket.type = BucketType.PAPER;
 
 	    cursors = game.input.keyboard.createCursorKeys();
 	     
@@ -200,9 +203,13 @@ window.onload = function() {
 			if(!garbage.sprite.collided) {
     			garbage.sprite.collided = true;
     			if(bucket.sprite.type == garbage.sprite.key) {
-    				score++;	
+    				score++;
+    				bucket.sprite.frame = 1;
+
     			} else {
     				score--;	
+
+    				bucket.sprite.frame = 0;
     			}
     			
     			scoreText.setText("Score: " + score);
