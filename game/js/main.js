@@ -7,62 +7,68 @@ window.onload = function() {
     }
 
   	var bucket;
-	var bottle;
+	var garbageGroup;
 	var cursors;
 
 	function create() {
-	    game.physics.startSystem(Phaser.Physics.ARCADE);
+	    game.physics.startSystem(Phaser.Physics.P2JS);
+		game.physics.p2.defaultRestitution = 0.8;
+		game.physics.p2.gravity.y = 400;
 
-	    game.stage.backgroundColor = '#2d2d2d';
+	    game.stage.backgroundColor = '#66CCFF';
 
-	    bottle = game.add.group();
+	    garbageGroup = game.add.group();
 
-	    bottle.createMultiple(250, 'bottle', 0, false);
+	    garbageGroup.createMultiple(50, 'bottle', 0, false);
+	   game.physics.p2.enable(garbageGroup);
 
 	    bucket = game.add.sprite(300, 450, 'bucket');
-
-	    game.physics.arcade.gravity.y = 400;
+		game.physics.p2.enable(bucket);
+		bucket.body.setZeroDamping();
+		bucket.body.fixedRotation = true;
+	    //game.physics.p2.gravity.y = 400;
 
 	    //  Enable physics on everything added to the world so far (the true parameter makes it recurse down into children)
-	    game.physics.arcade.enable(game.world, true);
-
+	  //  game.physics.p2.enable(game.world, true);
+	   
+		
 	    bucket.body.allowGravity = 0;
+	    // bucket.body.checkCollision.left = false;
+	    // bucket.body.checkCollision.right = false;
+		//bucket.body.setSize(94, 138, 0, 75);
+		bucket.body.collideWorldBounds = true;
 	    bucket.body.immovable = true;
 
 	    cursors = game.input.keyboard.createCursorKeys();
 
-	    game.time.events.loop(150, fire, this);
+	    game.time.events.loop(150, throwGarbage, this);
 
 	    game.add.text(16, 16, 'Left / Right to move', { font: '18px Arial', fill: '#ffffff' });
 
 	}
 
-	function fire() {
+	function throwGarbage() {
 
-	    var ball = bottle.getFirstExists(false);
-
-	    if (ball)
+	    var garbage = garbageGroup.getFirstExists(false);
+	 //   game.physics.p2.enable(garbage,false);
+	    if (garbage)
 	    {
-	        ball.frame = game.rnd.integerInRange(0,6);
-	        ball.exists = true;
-	        ball.reset(game.world.randomX, 0);
-
-	        ball.body.bounce.y = 0.8;
+	        garbage.frame = game.rnd.integerInRange(0,6);
+	        garbage.exists = true;
+	        garbage.reset(game.world.randomX, 0);
+	     
+	      //  garbage.body.bounce.y = 0.3;
 	    }
 
 	}
 
-	function reflect(a, ball) {
-
-	    if (ball.y > (bucket.y + 5))
-	    {
-	        return true;
-	    }
-	    else
-	    {
-	        ball.body.velocity.x = bucket.body.velocity.x;
-	        ball.body.velocity.y *= -(ball.body.bounce.y);
-
+	function collisionHandler (bucket, garbage) {
+    	if (garbage.x >= bucket.x && (garbage.x + garbage.width <= bucket.x + bucket.width)) {
+    		garbage.kill();
+        	return true;
+	    } else  {
+	    	garbage.body.velocity.x = bucket.body.velocity.x;
+	  //      garbage.body.angularVelocity = 200;
 	        return false;
 	    }
 
@@ -70,7 +76,9 @@ window.onload = function() {
 
 	function update() {
 
-	    game.physics.arcade.collide(bucket, bottle, null, reflect, this);
+	  //  game.physics.arcade.collide(bucket, garbageGroup, null, catchGarbage, this);
+	//    game.physics.arcade.collide(bucket, garbageGroup, collisionHandler, null, this);
+	   // game.physics.arcade.collide(garbageGroup,garbageGroup);
 
 	    bucket.body.velocity.x = 0;
 
@@ -83,20 +91,24 @@ window.onload = function() {
 	        bucket.body.velocity.x = 200;
 	    }
 
-	    bottle.forEachAlive(checkBounds, this);
+	    garbageGroup.forEachAlive(checkBounds, this);
 
 	}
 
-	function checkBounds(ball) {
+	function checkBounds(garbage) {
 
-	    if (ball.y > 600)
+	    if (garbage.y > 600)
 	    {
-	        ball.kill();
+	        garbage.kill();
 	    }
 
 	}
 
 	function render() {
-
+		game.debug.body(bucket);
+		garbageGroup.forEachAlive(function(garbage) {
+			game.debug.body(garbage);
+		}, this);
+	    
 	}
 };
