@@ -7,6 +7,7 @@ window.onload = function() {
   		game.load.image('bucket_glass', 'game/images/bucket_glass.png');
   		game.load.image('bucket_paper', 'game/images/bucket_paper.png');
         game.load.image('bottle', 'game/images/bottle.png');
+        game.load.image('paper', 'game/images/paper.png');
     }
 
   	var bucket;
@@ -15,10 +16,10 @@ window.onload = function() {
 	var score = 0;
 	var scoreText;
 	var BucketType = {
-		PAPER: 1,
-		GLASS: 2,
-		PLASTICS: 3,
-		DANGER: 4
+		PAPER: 'paper',
+		GLASS: 'bottle',
+		PLASTICS: 'plastics',
+		DANGER: 'danger'
 	};
 
 	var BucketKeys = {
@@ -28,10 +29,53 @@ window.onload = function() {
 		danger: null
 	};
 
+	var waveIndex = 0;
+	var waveMatrix = [
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+	];
+
 	function create() {
 	    game.physics.startSystem(Phaser.Physics.P2JS);
 	    game.physics.p2.setImpactEvents(true);
-		game.physics.p2.defaultRestitution = 0.1;
+		game.physics.p2.defaultRestitution = 1.0;
 		game.physics.p2.gravity.y = 200;
 		 //  Turn on impact events for the world, without this we get no collision callbacks
 	    game.physics.p2.setImpactEvents(true);
@@ -52,7 +96,9 @@ window.onload = function() {
 	    garbageGroup.enableBody = true;
     	garbageGroup.physicsBodyType = Phaser.Physics.P2JS;
 
+		garbageGroup.createMultiple(50, 'paper', 0, false);
 	    garbageGroup.createMultiple(50, 'bottle', 0, false);
+
 	   	game.physics.p2.enable(garbageGroup, false);
 	   	for (var i = garbageGroup.length - 1; i >= 0; i--) {
 	   		//garbageGroup.getAt(i).body.collideWorldBounds = true;
@@ -113,16 +159,38 @@ window.onload = function() {
 
 	function throwGarbage() {
 
-	    var garbage = garbageGroup.getFirstExists(false);
-	 
-	    if (garbage)
-	    {
-	        garbage.frame = game.rnd.integerInRange(0,6);
-	        garbage.exists = true;
-	        delete garbage.collided;
-	        garbage.reset(game.world.randomX, 0);
-	        
-	    }
+		var wave = waveMatrix[waveIndex];
+		for (var i = 0; i < wave.length; i++) {
+			var garbage;
+			var property;
+
+			if(wave[i] == 0) {
+				continue;
+			} else if(wave[i] == 1) {
+				property = 'paper'
+			} else if(wave[i] == 2) {
+				property = 'bottle'
+			}
+
+			while(!garbage || 
+				garbage.exists ||
+				garbage.key != property) {
+					garbage = garbageGroup.next();
+			}
+			    
+			garbage.frame = game.rnd.integerInRange(0,6);
+			garbage.exists = true;
+			delete garbage.collided;
+			        //garbage.reset(game.world.randomX, 0);
+			garbage.reset(800/wave.length*i, 0);
+			
+		};
+		if(waveIndex < waveMatrix.length-1) {
+			waveIndex++;	
+		} else {
+			waveIndex = 0;
+		}
+	    
 
 	}
 
@@ -131,7 +199,12 @@ window.onload = function() {
     		garbage.sprite.kill();
 			if(!garbage.sprite.collided) {
     			garbage.sprite.collided = true;
-    			score+=1;
+    			if(bucket.sprite.type == garbage.sprite.key) {
+    				score++;	
+    			} else {
+    				score--;	
+    			}
+    			
     			scoreText.setText("Score: " + score);
 			}
         	return true;
