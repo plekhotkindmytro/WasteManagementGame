@@ -2,7 +2,10 @@ window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create , update: update, render: render });
     function preload () {
         game.load.image('logo', 'game/images/phaser.png');
-  		game.load.image('bucket', 'game/images/bucket.png');
+  		game.load.image('bucket_danger', 'game/images/bucket_danger.png');
+  		game.load.image('bucket_plastics', 'game/images/bucket_plastics.png');
+  		game.load.image('bucket_glass', 'game/images/bucket_glass.png');
+  		game.load.image('bucket_paper', 'game/images/bucket_paper.png');
         game.load.image('bottle', 'game/images/bottle.png');
     }
 
@@ -11,11 +14,24 @@ window.onload = function() {
 	var cursors;
 	var score = 0;
 	var scoreText;
+	var BucketType = {
+		PAPER: 1,
+		GLASS: 2,
+		PLASTICS: 3,
+		DANGER: 4
+	};
+
+	var BucketKeys = {
+		paper: null,
+		glass: null,
+		plastics: null,
+		danger: null
+	};
 
 	function create() {
 	    game.physics.startSystem(Phaser.Physics.P2JS);
 	    game.physics.p2.setImpactEvents(true);
-		game.physics.p2.defaultRestitution = 0.8;
+		game.physics.p2.defaultRestitution = 0.1;
 		game.physics.p2.gravity.y = 200;
 		 //  Turn on impact events for the world, without this we get no collision callbacks
 	    game.physics.p2.setImpactEvents(true);
@@ -47,7 +63,7 @@ window.onload = function() {
        
 	   	};
 	   	
-	    bucket = game.add.sprite(300, 600, 'bucket');
+	    bucket = game.add.sprite(300, 600, 'bucket_plastics');
 		game.physics.p2.enable(bucket);
 		bucket.body.setZeroDamping();
 		bucket.body.fixedRotation = true;
@@ -56,13 +72,43 @@ window.onload = function() {
 	    bucket.body.setCollisionGroup(bucketCollisionGroup);
 
    		bucket.body.collides(garbageCollisionGroup, collisionHandler, this);
+   		bucket.type = BucketType.PLASTICS;
 
 	    cursors = game.input.keyboard.createCursorKeys();
+	     
+	    BucketKeys.paper  = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+    	BucketKeys.paper.onDown.add(setPaperBucket, this);
+    	BucketKeys.glass  = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+    	BucketKeys.glass.onDown.add(setGlassBucket, this);
+    	BucketKeys.plastics  = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+    	BucketKeys.plastics.onDown.add(setPlasticsBucket, this);
+    	BucketKeys.danger  = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+    	BucketKeys.danger.onDown.add(setDangerBucket, this);
 
-	    game.time.events.loop(150, throwGarbage, this);
+	    game.time.events.loop(300, throwGarbage, this);
 
 	   scoreText = game.add.text(16, 16, 'Score: ' + score, { font: '18px Arial', fill: '#ffffff' });
 
+	}
+
+	function setPaperBucket () {
+    	bucket.type = BucketType.PAPER;
+    	bucket.loadTexture('bucket_paper', 0);
+	}
+
+	function setGlassBucket () {
+    	bucket.type = BucketType.GLASS;
+    	bucket.loadTexture('bucket_glass', 0);
+	}
+
+	function setPlasticsBucket () {
+    	bucket.type = BucketType.PLASTICS;
+    	bucket.loadTexture('bucket_plastics', 0);
+	}
+
+	function setDangerBucket () {
+    	bucket.type = BucketType.DANGER;
+    	bucket.loadTexture('bucket_danger', 0);
 	}
 
 	function throwGarbage() {
@@ -73,7 +119,9 @@ window.onload = function() {
 	    {
 	        garbage.frame = game.rnd.integerInRange(0,6);
 	        garbage.exists = true;
+	        delete garbage.collided;
 	        garbage.reset(game.world.randomX, 0);
+	        
 	    }
 
 	}
@@ -81,9 +129,11 @@ window.onload = function() {
 	function collisionHandler (bucket, garbage) {
     	if (garbage.x + garbage.sprite.width/2 >= bucket.x && (garbage.x + garbage.sprite.width*3/2 <= bucket.x + bucket.sprite.width)) {
     		garbage.sprite.kill();
-    		score+=1;
-    		scoreText.setText("Score: " + score);
-
+			if(!garbage.sprite.collided) {
+    			garbage.sprite.collided = true;
+    			score+=1;
+    			scoreText.setText("Score: " + score);
+			}
         	return true;
 	    } else {
 	    	return false;
@@ -115,6 +165,7 @@ window.onload = function() {
 	function checkBounds(garbage) {
 	    if (garbage.y > 600) {
 	        garbage.kill();
+	        delete garbage.collided;
 	    }
 	}
 
