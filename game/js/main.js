@@ -2,10 +2,8 @@ window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create , update: update, render: render });
     function preload () {
         game.load.image('logo', 'game/images/phaser.png');
-  		game.load.image('bucket_danger', 'game/images/bucket_danger.png');
-  		game.load.image('bucket_plastics', 'game/images/bucket_plastics.png');
-  		game.load.image('bucket_glass', 'game/images/bucket_glass.png');
-  		game.load.atlas('bucket_paper', 'game/images/bucket_paper_sprite.png', 'game/images/bucket_paper_sprite.json');
+  		
+  		game.load.atlas('bucket', 'game/images/bucket_sprite.png', 'game/images/bucket_sprite.json');
         game.load.image('bottle', 'game/images/bottle.png');
         game.load.image('paper', 'game/images/paper.png');
     }
@@ -111,7 +109,8 @@ window.onload = function() {
 	   	};
 	   	
 
-	    bucket = game.add.sprite(300, 600, 'bucket_paper');
+	    bucket = game.add.sprite(300, 600, 'bucket', 'bucket_paper.png');
+	    bucket.type = BucketType.PAPER;
 
 		game.physics.p2.enable(bucket);
 		bucket.body.setZeroDamping();
@@ -121,8 +120,7 @@ window.onload = function() {
 	    bucket.body.setCollisionGroup(bucketCollisionGroup);
 
    		bucket.body.collides(garbageCollisionGroup, collisionHandler, this);
-   		bucket.type = BucketType.PAPER;
-
+   		
 	    cursors = game.input.keyboard.createCursorKeys();
 	     
 	    BucketKeys.paper  = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -142,22 +140,22 @@ window.onload = function() {
 
 	function setPaperBucket () {
     	bucket.type = BucketType.PAPER;
-    	bucket.loadTexture('bucket_paper', 0);
+    	bucket.frameName = 'bucket_paper.png';
 	}
 
 	function setGlassBucket () {
     	bucket.type = BucketType.GLASS;
-    	bucket.loadTexture('bucket_glass', 0);
+    	bucket.frameName = 'bucket_glass.png';
 	}
 
 	function setPlasticsBucket () {
     	bucket.type = BucketType.PLASTICS;
-    	bucket.loadTexture('bucket_plastics', 0);
+    	bucket.frameName = 'bucket_plastics.png';
 	}
 
 	function setDangerBucket () {
     	bucket.type = BucketType.DANGER;
-    	bucket.loadTexture('bucket_danger', 0);
+    	bucket.frameName = 'bucket_danger.png';
 	}
 
 	function throwGarbage() {
@@ -204,15 +202,15 @@ window.onload = function() {
     			garbage.sprite.collided = true;
     			if(bucket.sprite.type == garbage.sprite.key) {
     				score++;
-    				bucket.sprite.frame = 1;
+    				bucket.sprite.frameName = 'bucket_'+bucket.sprite.type+"1.png";
 
     			} else {
     				score--;	
 
-    				bucket.sprite.frame = 0;
+    				bucket.sprite.frameName = 'bucket_'+bucket.sprite.type+".png";
     			}
     			
-    			scoreText.setText("Score is score it: " + score);
+    			scoreText.setText("Score: " + score);
 			}
         	return true;
 	    } else {

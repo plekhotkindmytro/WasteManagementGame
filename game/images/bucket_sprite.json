@@ -1,0 +1,84 @@
+{"frames": [
+
+{
+	"filename": "bucket_danger.png",
+	"frame": {"x":2,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_danger1.png",
+	"frame": {"x":154,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_glass.png",
+	"frame": {"x":306,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_glass1.png",
+	"frame": {"x":458,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_paper.png",
+	"frame": {"x":610,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_paper1.png",
+	"frame": {"x":762,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_plastics.png",
+	"frame": {"x":914,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bucket_plastics1.png",
+	"frame": {"x":1066,"y":2,"w":150,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":150,"h":200},
+	"sourceSize": {"w":150,"h":200},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bucket_paper_sprite.png",
+	"format": "RGBA8888",
+	"size": {"w":1218,"h":204},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c63ec89131aac5d61f245d4738ca0d0d:971d092a6cfa980b2cf30ad4974a29ed:ebebb072de9d161268229d1bf47e9261$"
+}
+}
