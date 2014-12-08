@@ -1,7 +1,7 @@
 window.onload = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create , update: update, render: render });
     function preload () {
-        game.load.image('logo', 'game/images/phaser.png');
+        game.load.image('background', 'game/images/background.png');
   		
   		game.load.atlas('bucket', 'game/images/bucket_sprite.png', 'game/images/bucket_sprite.json');
         game.load.image('bottle', 'game/images/bottle.png');
@@ -71,7 +71,7 @@ window.onload = function() {
 	];
 
 	function create() {
-
+		game.add.sprite(0, 0, 'background');
 	    game.physics.startSystem(Phaser.Physics.P2JS);
 	    game.physics.p2.setImpactEvents(true);
 		game.physics.p2.defaultRestitution = 1.0;
