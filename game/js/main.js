@@ -4,8 +4,9 @@ window.onload = function() {
         game.load.image('background', 'game/images/background.png');
   		
   		game.load.atlas('bucket', 'game/images/bucket_sprite.png', 'game/images/bucket_sprite.json');
-        game.load.image('bottle', 'game/images/bottle.png');
+        game.load.image('glass', 'game/images/bottle.png');
         game.load.image('paper', 'game/images/paper.png');
+        game.load.image('alu', 'game/images/can.png');
     }
 
   	var bucket;
@@ -15,59 +16,59 @@ window.onload = function() {
 	var scoreText;
 	var BucketType = {
 		PAPER: 'paper',
-		GLASS: 'bottle',
+		GLASS: 'glass',
 		PLASTICS: 'plastics',
-		DANGER: 'danger'
+		ALUMINIUM: 'alu'
 	};
 
 	var BucketKeys = {
 		paper: null,
 		glass: null,
 		plastics: null,
-		danger: null
+		aluminium: null
 	};
 
 	var waveIndex = 0;
 	var waveMatrix = [
-		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-		[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	];
 
 	function create() {
@@ -75,7 +76,7 @@ window.onload = function() {
 	    game.physics.startSystem(Phaser.Physics.P2JS);
 	    game.physics.p2.setImpactEvents(true);
 		game.physics.p2.defaultRestitution = 1.0;
-		game.physics.p2.gravity.y = 200;
+		game.physics.p2.gravity.y = 100;
 		 //  Turn on impact events for the world, without this we get no collision callbacks
 	    game.physics.p2.setImpactEvents(true);
 
@@ -96,7 +97,8 @@ window.onload = function() {
     	garbageGroup.physicsBodyType = Phaser.Physics.P2JS;
 
 		garbageGroup.createMultiple(50, 'paper', 0, false);
-	    garbageGroup.createMultiple(50, 'bottle', 0, false);
+	    garbageGroup.createMultiple(50, 'glass', 0, false);
+	    garbageGroup.createMultiple(50, 'alu', 0, false);
 
 	   	game.physics.p2.enable(garbageGroup, false);
 	   	for (var i = garbageGroup.length - 1; i >= 0; i--) {
@@ -129,10 +131,10 @@ window.onload = function() {
     	BucketKeys.glass.onDown.add(setGlassBucket, this);
     	BucketKeys.plastics  = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
     	BucketKeys.plastics.onDown.add(setPlasticsBucket, this);
-    	BucketKeys.danger  = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
-    	BucketKeys.danger.onDown.add(setDangerBucket, this);
+    	BucketKeys.aluminium  = game.input.keyboard.addKey(Phaser.Keyboard.FOUR);
+    	BucketKeys.aluminium.onDown.add(setAluminiumBucket, this);
 
-	    game.time.events.loop(300, throwGarbage, this);
+	    game.time.events.loop(400, throwGarbage, this);
 
 	   scoreText = game.add.text(16, 16, 'Score: ' + score, { font: '18px Arial', fill: '#ffffff' });
 
@@ -153,9 +155,9 @@ window.onload = function() {
     	bucket.frameName = 'bucket_plastics.png';
 	}
 
-	function setDangerBucket () {
-    	bucket.type = BucketType.DANGER;
-    	bucket.frameName = 'bucket_danger.png';
+	function setAluminiumBucket () {
+    	bucket.type = BucketType.ALUMINIUM;
+    	bucket.frameName = 'bucket_alu.png';
 	}
 
 	function throwGarbage() {
@@ -170,7 +172,9 @@ window.onload = function() {
 			} else if(wave[i] == 1) {
 				property = 'paper'
 			} else if(wave[i] == 2) {
-				property = 'bottle'
+				property = 'glass'
+			} else if(wave[i] == 3) {
+				property = 'alu'
 			}
 
 			while(!garbage || 
@@ -196,7 +200,7 @@ window.onload = function() {
 	}
 
 	function collisionHandler (bucket, garbage) {
-    	if (garbage.x + garbage.sprite.width/2 >= bucket.x && (garbage.x + garbage.sprite.width*3/2 <= bucket.x + bucket.sprite.width)) {
+    	if (garbage.x + garbage.sprite.width*3/2 >= bucket.x && (garbage.x + garbage.sprite.width*3/2 <= bucket.x + bucket.sprite.width)) {
     		garbage.sprite.kill();
 			if(!garbage.sprite.collided) {
     			garbage.sprite.collided = true;
@@ -221,20 +225,16 @@ window.onload = function() {
 
 	function update() {
 
-	  	// game.physics.arcade.collide(bucket, garbageGroup, null, catchGarbage, this);
-		// game.physics.arcade.collide(bucket, garbageGroup, collisionHandler, null, this);
-	    // game.physics.arcade.collide(garbageGroup,garbageGroup);
-
     	bucket.body.setZeroVelocity();
     	bucket.body.y = 532;
 
-	    if (cursors.left.isDown && bucket.body.x>0)
+	    if (cursors.left.isDown && bucket.body.x - bucket.width/2>0)
 	    {
-	        bucket.body.moveLeft(200);          
+	        bucket.body.moveLeft(400);          
 	    }
-	    else if (cursors.right.isDown && bucket.body.x<800)
+	    else if (cursors.right.isDown && bucket.body.x+bucket.width/2<800)
 	    {
-	        bucket.body.moveRight(200);
+	        bucket.body.moveRight(400);
            
 	    }
 

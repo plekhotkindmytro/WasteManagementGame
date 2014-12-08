@@ -1,7 +1,7 @@
 {"frames": [
 
 {
-	"filename": "bucket_danger.png",
+	"filename": "bucket_alu.png",
 	"frame": {"x":2,"y":2,"w":150,"h":200},
 	"rotated": false,
 	"trimmed": false,
@@ -10,7 +10,7 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "bucket_danger1.png",
+	"filename": "bucket_alu1.png",
 	"frame": {"x":154,"y":2,"w":150,"h":200},
 	"rotated": false,
 	"trimmed": false,
@@ -79,6 +79,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1218,"h":204},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:c63ec89131aac5d61f245d4738ca0d0d:971d092a6cfa980b2cf30ad4974a29ed:ebebb072de9d161268229d1bf47e9261$"
+	"smartupdate": "$TexturePacker:SmartUpdate:1fcc35fd1acc1a0f36ddedd8de8a2a80:a0c0a67c8b744423088f85ad3c8c803d:ebebb072de9d161268229d1bf47e9261$"
 }
 }
