@@ -1,6 +1,7 @@
 WasteManagementGame
 ===================
 [![Koding Hackathon](https://raw.githubusercontent.com/koding/hackathon.submit/master/images/badge.png)](https://koding.com/Hackathon)
+
 HTML5 game that teaches kids how to sort waste for recycling. Developed at Koding Hackathon.
 
 ## Controls
